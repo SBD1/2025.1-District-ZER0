@@ -2,8 +2,6 @@
 
 Documentação oficial do projeto **District ZER0: Cyberpunk Pocket MUD**.
 
-GRUPO 15 DE SISTEMAS DE BANCOS DE DADOS 1 - 2025.1 - UnB
-
 ## Sobre o Projeto
 
 **District ZER0** é um Multi-User Dungeon (MUD) com temática cyberpunk desenvolvido como projeto para a disciplina de Sistemas de Bancos de Dados 1 (SBD1) no semestre 2025.1. O jogo é implementado utilizando PostgreSQL como sistema de banco de dados principal, garantindo persistência, consistência e escalabilidade dos dados.

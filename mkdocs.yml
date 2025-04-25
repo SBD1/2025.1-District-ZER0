@@ -1,0 +1,47 @@
+site_name: District ZER0
+repo_url: https://github.com/SBD1/2025.1-District-ZER0/
+repo_name: District ZER0
+
+theme:
+  name: material
+  language: pt-BR
+  logo: /assets/favicon.png
+  favicon: /assets/favicon.png
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+
+# CSS personalizado
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+  - pymdownx.emoji
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - admonition
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - Guia de Contribuição:
+    - guia-de-contribuicao/politica-de-branches.md
+    - guia-de-contribuicao/politica-de-commits.md
+
+plugins:
+  - search 
