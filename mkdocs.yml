@@ -38,7 +38,13 @@ markdown_extensions:
   - pymdownx.details
 
 nav:
-  - Home: index.md
+  - Início: index.md
+  - Módulo 1:
+    - Dicionário de Dados: modulo1/DD.md
+    - Modelo Entidade Relacionamento: modulo1/DER.md
+    - Diagrama Entidade Relacionamento: modulo1/MER.md
+    - Modelo Relacional: modulo1/MREL.md
+
   - Guia de Contribuição:
     - guia-de-contribuicao/politica-de-branches.md
     - guia-de-contribuicao/politica-de-commits.md
