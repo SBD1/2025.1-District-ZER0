@@ -41,8 +41,8 @@ nav:
   - Início: index.md
   - Módulo 1:
     - Dicionário de Dados: modulo1/DD.md
-    - Modelo Entidade Relacionamento: modulo1/DER.md
-    - Diagrama Entidade Relacionamento: modulo1/MER.md
+    - Modelo Entidade Relacionamento: modulo1/MER.md
+    - Diagrama Entidade Relacionamento: modulo1/DER.md
     - Modelo Relacional: modulo1/MREL.md
 
   - Guia de Contribuição:
