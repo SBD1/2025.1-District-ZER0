@@ -8,21 +8,81 @@ GRUPO 15 DE SISTEMAS DE BANCOS DE DADOS 1 - 2025.1 - UnB
 
 **District ZER0** é um Multi-User Dungeon (MUD) com temática cyberpunk desenvolvido como projeto para a disciplina de Sistemas de Bancos de Dados 1 (SBD1) no semestre 2025.1. O jogo é implementado utilizando PostgreSQL como sistema de banco de dados principal, garantindo persistência, consistência e escalabilidade dos dados.
 
-## O Mundo de District ZER0
+## Documentação
 
-Em um futuro distópico onde megacorporações controlam todas as esferas da sociedade, existe uma zona conhecida apenas como "District ZER0" - um submundo digital onde hackers, mercenários e rebeldes lutam pela sobrevivência e reputação. Como jogador, você navegará por este ambiente hostil, coletará itens, enfrentará inimigos e construirá sua lenda neste universo cibernético.
+A documentação do projeto é gerenciada com [MkDocs](https://www.mkdocs.org/) e está disponível em: 
+**[https://sbd1.github.io/2025.1-District-ZER0/](https://sbd1.github.io/2025.1-District-ZER0/)**
 
-## Mecânicas de Jogo
+### Branch `docs`
 
-- **Exploração**: Navegue por salas interconectadas em um mapa urbano cyberpunk usando comandos de direção (N/S/L/O)
-- **Coleta de Itens**: Encontre e utilize chips, armas e dados criptografados para melhorar seu personagem
-- **Combate**: Enfrente NPCs hostis (mobs) em combates baseados em turnos com sistema de transações isoladas
-- **Persistência Total**: Todos os dados do mundo são armazenados no banco de dados
-- **Sistema de Reputação**: Suas ações afetam como o mundo virtual reage a você e sua posição no ranking global
+A branch `docs` é dedicada exclusivamente para desenvolvimento e atualização da documentação do projeto. 
 
-## Equipe
+- Todas as alterações na documentação devem ser feitas nesta branch
+- PRs relacionados à documentação devem ter `doc` como branch alvo
 
-- VINICIUS ANGELO DE BRITO VIEIRA - 190118059
-- MATEUS LEVY AVELANS BOQUADY - 190113901
-- GUILHERME BASILIO DO ESPÍRITO SANTO - 160007615
+### Workflow de Deploy
+
+O projeto utiliza GitHub Actions para automatizar o deploy da documentação:
+
+- O workflow é acionado automaticamente quando:
+  - Ocorre um push para a branch `docs` (afetando arquivos em `docs/` ou `mkdocs.yml`)
+  - Um PR é aberto/atualizado para a branch `docs` (afetando arquivos em `docs/` ou `mkdocs.yml`)
+  - Acionado manualmente através da interface do GitHub (Actions → Workflows → Deploy Documentação → Run workflow)
+
+- O resultado do deploy é publicado na branch `gh-pages` e disponibilizado através do GitHub Pages
+
+## Executando a Documentação Localmente
+
+Para visualizar a documentação em seu ambiente local:
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/SBD1/2025.1-District-ZER0/
+   cd 2025.1-District-ZER0
+   git checkout docs
+   git pull
+   ```
+
+2. Crie e ative um ambiente virtual:
+   ```bash
+   # No Linux/macOS
+   python -m venv .venv
+   source .venv/bin/activate
+
+   # No Windows
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+3. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Execute o servidor MkDocs:
+   ```bash
+   mkdocs serve
+   ```
+   
+5. O terminal fornecerá um link (geralmente http://127.0.0.1:8000). Clique nele ou copie para seu navegador.
+
+## Contribuição
+
+Para contribuir com a documentação:
+
+1. Crie um branch a partir de `docs`:
+   ```bash
+   git checkout docs
+   git pull
+   git checkout -b doc/sua-alteracao
+   ```
+
+2. Faça suas alterações e commit:
+   ```bash
+   git add .
+   git commit -m "docs: descrição da alteração"
+   git push origin doc/sua-alteracao
+   ```
+
+3. Abra um Pull Request para a branch `docs`
 
