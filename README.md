@@ -20,6 +20,13 @@ Em um futuro distópico onde megacorporações controlam todas as esferas da soc
 - **Persistência Total**: Todos os dados do mundo são armazenados no banco de dados
 - **Sistema de Reputação**: Suas ações afetam como o mundo virtual reage a você e sua posição no ranking global
 
+## Entrega 1
+
+- [Diagrama entidade relacionamento](docs\modulo1\DER.md)
+- [Modelo entidade relacionamento](docs\modulo1\MER.md)
+- [Dicionário de Dados](docs\modulo1\DD.md)
+- [Modelo Relacional](docs\modulo1\MREL.md)
+
 ## Equipe
 
 <center>
