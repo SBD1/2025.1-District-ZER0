@@ -22,9 +22,39 @@ Em um futuro distópico onde megacorporações controlam todas as esferas da soc
 
 ## Equipe
 
-- VINICIUS ANGELO DE BRITO VIEIRA - 190118059
-- MATEUS LEVY AVELANS BOQUADY - 190113901
-- GUILHERME BASILIO DO ESPÍRITO SANTO - 160007615
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/viniciusvieira00">
+        <img style="border-radius: 50%;" src="https://github.com/viniciusvieira00.png" width="100px;" alt=""/>
+        <br />
+        <sub><b>VINICIUS VIEIRA</b></sub>
+      </a>
+      <br />
+      <sub>190118059</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/GuilhermeBES">
+        <img style="border-radius: 50%;" src="https://github.com/GuilhermeBES.png" width="100px;" alt=""/>
+        <br />
+        <sub><b>GUILHERME BASILIO</b></sub>
+      </a>
+      <br />
+      <sub>160007615</sub>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mateus9levy">
+        <img style="border-radius: 50%;" src="https://github.com/mateus9levy.png" width="100px;" alt=""/>
+        <br />
+        <sub><b>MATEUS LEVY</b></sub>
+      </a>
+      <br />
+      <sub>190113901</sub>
+    </td>
+  </tr>
+</table>
+</center>
 
 ## Documentação
 
