@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../DER/">
+      
+      
+        <link rel="next" href="../MREL/">
       
       
       <link rel="icon" href="../../assets/favicon.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>Modelo Entidade-Relacionamentos - MER - District ZER0</title>
+        <title>Diagrama Entidade Relacionamento - District ZER0</title>
       
     
     
@@ -103,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Modelo Entidade-Relacionamentos - MER
+              Diagrama Entidade Relacionamento
             
           </span>
         </div>
@@ -229,12 +233,176 @@
   
   
   <span class="md-ellipsis">
-    Home
+    Início
     
   </span>
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Módulo 1
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Módulo 1
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dicionário de Dados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modelo Entidade Relacionamento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Diagrama Entidade Relacionamento
+    
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MREL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modelo Relacional
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -267,10 +435,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -283,8 +451,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Guia de Contribuição
           </label>
@@ -382,13 +550,230 @@
 
 <h1 id="modelo-entidade-relacionamentos-mer"><strong>Modelo Entidade-Relacionamentos - MER</strong></h1>
 <p>O Modelo Entidade-Relacionamentos (MER) é uma ferramenta essencial na modelagem de dados, permitindo a representação gráfica de entidades, atributos e relacionamentos em um sistema. Ele serve como base para o desenvolvimento de bancos de dados relacionais, garantindo uma estrutura lógica e eficiente para o armazenamento e recuperação de informações. Neste documento, exploraremos os conceitos fundamentais do MER e sua aplicação prática.</p>
-<center>
-
-## Histórico de Versão
-| Versão | Data | Descrição | Autor(es) |
-| :-: | :-: | :-: | :-: | 
-| `1.0`  | 30/04/2025 | Adição do Modelo Relacional | [Guilherme Basílio](https://github.com/GuilhermeBES) |
-</center>
+<h1 id="modelo-entidade-relacionamento-district-zer0">Modelo Entidade-Relacionamento — <em>District ZER0</em></h1>
+<h2 id="entidades-e-atributos">Entidades e Atributos</h2>
+<h3 id="1-jogador">1. <strong>Jogador</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único do jogador  </li>
+<li><code>username</code> (varchar): Nome de usuário  </li>
+<li><code>senha_hash</code> (varchar): Hash da senha  </li>
+</ul>
+<hr />
+<h3 id="2-personagem">2. <strong>Personagem</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único do personagem  </li>
+<li><code>jogador_id</code> (FK → Jogador): Dono do personagem  </li>
+<li><code>nivel</code> (inteiro): Nível  </li>
+<li><code>vida</code> (inteiro): Pontos de vida  </li>
+<li><code>experiencia</code> (inteiro): Pontos de experiência  </li>
+<li><code>reputacao</code> (inteiro): Reputação  </li>
+<li><code>carteira</code> (inteiro): Créditos  </li>
+<li><code>ataque</code> (inteiro): Poder de ataque  </li>
+<li><code>defesa</code> (inteiro): Poder de defesa  </li>
+<li><code>faccao_id</code> (FK → Faccao): Facção (opcional)  </li>
+<li><code>sala_atual_id</code> (FK → Sala): Sala atual  </li>
+</ul>
+<hr />
+<h3 id="3-sala">3. <strong>Sala</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>nome</code> (varchar): Nome da sala  </li>
+<li><code>tipo</code> (varchar): Tipo da sala (normal, safe-zone, boss-room...)  </li>
+<li><code>descricao</code> (texto): Descrição  </li>
+</ul>
+<hr />
+<h3 id="4-item">4. <strong>Item</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>nome</code> (varchar): Nome do item  </li>
+<li><code>tipo</code> (varchar): Tipo (chip, arma, dado...)  </li>
+<li><code>descricao</code> (texto): Descrição  </li>
+<li><code>raridade</code> (varchar): Grau de raridade  </li>
+<li><code>valor</code> (inteiro): Valor monetário/utilidade  </li>
+</ul>
+<hr />
+<h3 id="5-inventario-iteminventario">5. <strong>Inventário (ItemInventário)</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>jogador_id</code> (FK → Jogador): Dono do item  </li>
+<li><code>mob_id</code> (FK → Mob, opcional): Origem do item  </li>
+<li><code>item_id</code> (FK → Item): Item  </li>
+<li><code>quantidade</code> (inteiro): Quantidade  </li>
+</ul>
+<hr />
+<h3 id="6-item-na-sala-itemsala">6. <strong>Item na Sala (ItemSala)</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>sala_id</code> (FK → Sala): Localização  </li>
+<li><code>item_id</code> (FK → Item): Item disponível  </li>
+<li><code>quantidade</code> (inteiro): Quantidade  </li>
+</ul>
+<hr />
+<h3 id="7-mob">7. <strong>Mob</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>nome</code> (varchar): Nome do mob  </li>
+<li><code>tipo</code> (varchar): Tipo (mob ou boss)  </li>
+<li><code>vida</code> (inteiro): Vida  </li>
+<li><code>ataque</code> (inteiro): Ataque  </li>
+<li><code>defesa</code> (inteiro): Defesa  </li>
+<li><code>sala_id</code> (FK → Sala): Sala onde está  </li>
+<li><code>drop_table</code> (JSON): Tabela de drops  </li>
+</ul>
+<hr />
+<h3 id="8-missao">8. <strong>Missão</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>nome</code> (varchar): Nome  </li>
+<li><code>descricao</code> (texto): Descrição  </li>
+<li><code>recompensa</code> (varchar): Tipo de recompensa  </li>
+<li><code>pre_requisito_missao</code> (inteiro): XP mínimo  </li>
+<li><code>tipo</code> (varchar): Tipo de missão  </li>
+</ul>
+<hr />
+<h3 id="9-missao-por-jogador-missaojogador">9. <strong>Missão por Jogador (MissaoJogador)</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>jogador_id</code> (FK → Jogador): Dono da missão  </li>
+<li><code>missao_id</code> (FK → Missao): Missão  </li>
+<li><code>status</code> (varchar): Estado (em andamento, completada, falhada)  </li>
+<li><code>progresso</code> (inteiro): Percentual (0–100)  </li>
+</ul>
+<hr />
+<h3 id="10-faccao-faccao">10. <strong>Facção (Faccao)</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>nome</code> (varchar): Nome  </li>
+<li><code>descricao</code> (texto): Descrição  </li>
+<li><code>reputacao</code> (inteiro): Reputação global  </li>
+</ul>
+<hr />
+<h3 id="11-combate">11. <strong>Combate</strong></h3>
+<ul>
+<li><code>id</code> (PK, inteiro): Identificador único  </li>
+<li><code>personagem_id</code> (FK → Personagem): Participante  </li>
+<li><code>mob_id</code> (FK → Mob, opcional): Inimigo  </li>
+<li><code>data_hora</code> (timestamp): Data/hora  </li>
+<li><code>resultado</code> (varchar): Resultado (vitória, derrota)  </li>
+</ul>
+<hr />
+<h2 id="relacionamentos">Relacionamentos</h2>
+<table>
+<thead>
+<tr>
+<th>Entidade Origem</th>
+<th>Relacionamento</th>
+<th>Entidade Destino</th>
+<th>Tipo de Relacionamento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Personagem</strong></td>
+<td>pertence a</td>
+<td><strong>Jogador</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Personagem</strong></td>
+<td>está na</td>
+<td><strong>Sala</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Personagem</strong></td>
+<td>pertence a (opcional)</td>
+<td><strong>Facção</strong></td>
+<td>N:1 (opcional)</td>
+</tr>
+<tr>
+<td><strong>ItemInventário</strong></td>
+<td>pertence a</td>
+<td><strong>Jogador</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Item</strong></td>
+<td>contém</td>
+<td><strong>ItemInventário</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Item</strong></td>
+<td>pertence a (opcional)</td>
+<td><strong>Mob</strong></td>
+<td>N:1 (opcional)</td>
+</tr>
+<tr>
+<td><strong>ItemSala</strong></td>
+<td>está em</td>
+<td><strong>Sala</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>ItemSala</strong></td>
+<td>contém</td>
+<td><strong>Item</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Mob</strong></td>
+<td>está em</td>
+<td><strong>Sala</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>MissaoJogador</strong></td>
+<td>pertence a</td>
+<td><strong>Jogador</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>MissaoJogador</strong></td>
+<td>refere-se a</td>
+<td><strong>Missão</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Combate</strong></td>
+<td>envolve</td>
+<td><strong>Personagem</strong></td>
+<td>N:1</td>
+</tr>
+<tr>
+<td><strong>Combate</strong></td>
+<td>contra (opcional)</td>
+<td><strong>Mob</strong></td>
+<td>N:1 (opcional)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="historico-de-versao">Histórico de Versão</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Versão</th>
+<th style="text-align: center;">Data</th>
+<th style="text-align: center;">Descrição</th>
+<th style="text-align: center;">Autor(es)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>1.0</code></td>
+<td style="text-align: center;">30/04/2025</td>
+<td style="text-align: center;">Adição do Modelo Relacional</td>
+<td style="text-align: center;"><a href="https://github.com/GuilhermeBES">Guilherme Basílio</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>1.1</code></td>
+<td style="text-align: center;">30/04/2025</td>
+<td style="text-align: center;">Modifica Modelo Entidade Relacionamento</td>
+<td style="text-align: center;"><a href="https://github.com/mateus9levy">Mateus Levy</a></td>
+</tr>
+</tbody>
+</table>
 
 
 
