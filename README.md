@@ -22,10 +22,10 @@ Em um futuro distópico onde megacorporações controlam todas as esferas da soc
 
 ## Entrega 1
 
-- [Diagrama entidade relacionamento](docs\modulo1\DER.md)
-- [Modelo entidade relacionamento](docs\modulo1\MER.md)
-- [Dicionário de Dados](docs\modulo1\DD.md)
-- [Modelo Relacional](docs\modulo1\MREL.md)
+- [Diagrama entidade relacionamento](https://sbd1.github.io/2025.1-District-ZER0/modulo1/DER/)
+- [Modelo entidade relacionamento](https://sbd1.github.io/2025.1-District-ZER0/modulo1/MER/)
+- [Dicionário de Dados](https://sbd1.github.io/2025.1-District-ZER0/modulo1/DD/)
+- [Modelo Relacional](https://sbd1.github.io/2025.1-District-ZER0/modulo1/MREL/)
 
 ## Equipe
 
