@@ -1,0 +1,2026 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../implementacao-sql/">
+      
+      
+        <link rel="next" href="../apresentacao/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Infraestrutura Docker - District ZER0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#infraestrutura-docker-modulo-2" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="District ZER0" class="md-header__button md-logo" aria-label="District ZER0" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            District ZER0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Infraestrutura Docker
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SBD1/2025.1-District-ZER0/" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    District ZER0
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="District ZER0" class="md-nav__button md-logo" aria-label="District ZER0" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    District ZER0
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SBD1/2025.1-District-ZER0/" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    District ZER0
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Início
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Módulo 1
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Módulo 1
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modulo1/DD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dicionário de Dados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modulo1/MER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modelo Entidade Relacionamento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modulo1/DER/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Diagrama Entidade Relacionamento
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modulo1/MREL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modelo Relacional
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modulo1/apresentacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Apresentação do Módulo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Módulo 2
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Módulo 2
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Guia de Setup com Docker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementacao-sql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementação SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Infraestrutura Docker
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infraestrutura Docker
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquivos-de-infraestrutura" class="md-nav__link">
+    <span class="md-ellipsis">
+      🐳 Arquivos de Infraestrutura
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐳 Arquivos de Infraestrutura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-composeyml-orquestracao-de-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      docker-compose.yml - Orquestração de Serviços
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="docker-compose.yml - Orquestração de Serviços">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#servicos-implementados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serviços Implementados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serviços Implementados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mysql-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      MySQL Database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminer-interface-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adminer - Interface Web
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracoes-avancadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configurações Avançadas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurações Avançadas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#makefile-automacao-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Makefile - Automação de Comandos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Makefile - Automação de Comandos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-principais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comandos Principais
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comandos Principais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gestao-de-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gestão de Serviços
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-e-validacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testes e Validação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-e-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup e Restore
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envexample-configuracao-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      .env.example - Configuração de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts-auxiliares" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Scripts Auxiliares
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Scripts Auxiliares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scriptshealth-checksh-verificacao-de-saude" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts/health-check.sh - Verificação de Saúde
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-de-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Arquitetura de Rede
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Arquitetura de Rede">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comunicacao-entre-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comunicação entre Serviços
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapeamento-de-portas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapeamento de Portas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-e-persistencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes e Persistência
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-inicializacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Fluxo de Inicialização
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Fluxo de Inicialização">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequencia-de-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequência de Startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts-de-inicializacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripts de Inicialização
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoramento-e-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Monitoramento e Logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoramento e Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comandos de Diagnóstico
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metricas-de-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métricas de Sistema
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comandos-de-desenvolvimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Comandos de Desenvolvimento
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Comandos de Desenvolvimento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acesso-direto-ao-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      Acesso Direto ao Banco
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limpeza-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limpeza de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demonstracao-automatizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Demonstração Automatizada
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Demonstração Automatizada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comando-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comando de Entrega
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracoes-de-seguranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔒 Configurações de Segurança
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔒 Configurações de Segurança">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isolamento-de-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolamento de Rede
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gerenciamento-de-credenciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gerenciamento de Credenciais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-seguros" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes Seguros
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vantagens-da-implementacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Vantagens da Implementação
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Vantagens da Implementação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#para-desenvolvimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Desenvolvimento
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#para-demonstracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Demonstração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#para-manutencao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Manutenção
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historico-de-versao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Histórico de Versão
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apresentacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Apresentação do Módulo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guia de Contribuição
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Guia de Contribuição
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guia-de-contribuicao/politica-de-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Política de Branches
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guia-de-contribuicao/politica-de-commits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Política de Commits
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquivos-de-infraestrutura" class="md-nav__link">
+    <span class="md-ellipsis">
+      🐳 Arquivos de Infraestrutura
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🐳 Arquivos de Infraestrutura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-composeyml-orquestracao-de-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      docker-compose.yml - Orquestração de Serviços
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="docker-compose.yml - Orquestração de Serviços">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#servicos-implementados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serviços Implementados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serviços Implementados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mysql-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      MySQL Database
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adminer-interface-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adminer - Interface Web
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracoes-avancadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configurações Avançadas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurações Avançadas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#makefile-automacao-de-comandos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Makefile - Automação de Comandos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Makefile - Automação de Comandos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-principais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comandos Principais
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comandos Principais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gestao-de-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gestão de Serviços
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testes-e-validacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testes e Validação
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-e-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup e Restore
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envexample-configuracao-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      .env.example - Configuração de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripts-auxiliares" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Scripts Auxiliares
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Scripts Auxiliares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scriptshealth-checksh-verificacao-de-saude" class="md-nav__link">
+    <span class="md-ellipsis">
+      scripts/health-check.sh - Verificação de Saúde
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-de-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Arquitetura de Rede
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Arquitetura de Rede">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comunicacao-entre-servicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comunicação entre Serviços
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapeamento-de-portas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapeamento de Portas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-e-persistencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes e Persistência
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-inicializacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Fluxo de Inicialização
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Fluxo de Inicialização">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequencia-de-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequência de Startup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scripts-de-inicializacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripts de Inicialização
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoramento-e-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Monitoramento e Logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Monitoramento e Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comandos-de-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comandos de Diagnóstico
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metricas-de-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métricas de Sistema
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comandos-de-desenvolvimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Comandos de Desenvolvimento
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Comandos de Desenvolvimento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acesso-direto-ao-banco" class="md-nav__link">
+    <span class="md-ellipsis">
+      Acesso Direto ao Banco
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limpeza-de-ambiente" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limpeza de Ambiente
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demonstracao-automatizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Demonstração Automatizada
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Demonstração Automatizada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comando-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comando de Entrega
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracoes-de-seguranca" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔒 Configurações de Segurança
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔒 Configurações de Segurança">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isolamento-de-rede" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolamento de Rede
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gerenciamento-de-credenciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gerenciamento de Credenciais
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-seguros" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes Seguros
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vantagens-da-implementacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Vantagens da Implementação
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Vantagens da Implementação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#para-desenvolvimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Desenvolvimento
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#para-demonstracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Demonstração
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#para-manutencao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Para Manutenção
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historico-de-versao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Histórico de Versão
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="infraestrutura-docker-modulo-2"><strong>Infraestrutura Docker - Módulo 2</strong></h1>
+<p>A containerização é uma tecnologia essencial para o desenvolvimento moderno de software, permitindo criar ambientes isolados, consistentes e facilmente replicáveis. Este documento apresenta a implementação completa da infraestrutura Docker para o projeto District ZER0, incluindo a configuração de serviços, automação com Makefile e scripts auxiliares.</p>
+<h2 id="arquivos-de-infraestrutura">🐳 Arquivos de Infraestrutura</h2>
+<h3 id="docker-composeyml-orquestracao-de-servicos"><strong>docker-compose.yml</strong> - Orquestração de Serviços</h3>
+<p>Arquivo principal de configuração que define e coordena os serviços necessários para o funcionamento do sistema.</p>
+<h4 id="servicos-implementados"><strong>Serviços Implementados</strong></h4>
+<h5 id="mysql-database"><strong>MySQL Database</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">mysql</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql:8.0</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero_mysql</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">MYSQL_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root_password</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">MYSQL_DATABASE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">MYSQL_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero_user</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">MYSQL_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero_pass</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3306:3306&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql_data:/var/lib/mysql</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./Dev:/docker-entrypoint-initdb.d</span>
+</code></pre></div>
+<p><strong>Características:</strong>
+- <strong>Versão estável</strong>: MySQL 8.0 LTS
+- <strong>Inicialização automática</strong>: Scripts SQL executados na primeira inicialização
+- <strong>Persistência</strong>: Volume nomeado para dados duráveis
+- <strong>Configurações personalizadas</strong>: Variáveis de ambiente específicas do projeto</p>
+<h5 id="adminer-interface-web"><strong>Adminer - Interface Web</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">adminer</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminer:latest</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero_adminer</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">depends_on</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql</span>
+</code></pre></div>
+<p><strong>Funcionalidades:</strong>
+- <strong>Interface visual</strong>: Gerenciamento de banco via navegador
+- <strong>Dependência</strong>: Aguarda MySQL estar disponível
+- <strong>Acesso simplificado</strong>: http://localhost:8080</p>
+<h4 id="configuracoes-avancadas"><strong>Configurações Avançadas</strong></h4>
+<h5 id="volumes"><strong>Volumes</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">volumes</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">mysql_data</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span>
+</code></pre></div>
+<h5 id="networks"><strong>Networks</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">networks</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">district_zero_network</span>
+</code></pre></div>
+<h3 id="makefile-automacao-de-comandos"><strong>Makefile</strong> - Automação de Comandos</h3>
+<p>Sistema de automação que simplifica operações complexas em comandos simples e memorizáveis.</p>
+<h4 id="comandos-principais"><strong>Comandos Principais</strong></h4>
+<h5 id="setup-de-ambiente"><strong>Setup de Ambiente</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nf">setup</span><span class="o">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🔍 Verificando dependências...&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>@command<span class="w"> </span>-v<span class="w"> </span>docker<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Docker não encontrado&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>@command<span class="w"> </span>-v<span class="w"> </span>docker-compose<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Docker Compose não encontrado&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Dependências OK&quot;</span>
+</code></pre></div>
+<h5 id="gestao-de-servicos"><strong>Gestão de Serviços</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nf">start</span><span class="o">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🚀 Iniciando serviços...&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;⏳ Aguardando inicialização do MySQL...&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>@sleep<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Serviços iniciados&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nf">stop</span><span class="o">:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🛑 Parando serviços...&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>docker-compose<span class="w"> </span>down
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Serviços parados&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nf">restart</span><span class="o">:</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🔄 Reiniciando serviços...&quot;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>stop
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>start
+</code></pre></div>
+<h5 id="testes-e-validacao"><strong>Testes e Validação</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nf">test</span><span class="o">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🧪 Executando queries de teste...&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>district_zero<span class="w"> </span>&lt;<span class="w"> </span>Dev/DQL_mysql.sql
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Testes executados&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nf">health</span><span class="o">:</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🏥 Verificando saúde dos serviços...&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>@./scripts/health-check.sh
+</code></pre></div>
+<h5 id="backup-e-restore"><strong>Backup e Restore</strong></h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nf">backup</span><span class="o">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;💾 Criando backup...&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>district_zero_mysql<span class="w"> </span>mysqldump<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>district_zero<span class="w"> </span>&gt;<span class="w"> </span>district_zero_<span class="k">$(</span>shell<span class="w"> </span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>.sql
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Backup criado&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nf">restore</span><span class="o">:</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🔄 Restaurando backup...&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>district_zero<span class="w"> </span>&lt;<span class="w"> </span><span class="k">$(</span>BACKUP_FILE<span class="k">)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Backup restaurado&quot;</span>
+</code></pre></div>
+<h3 id="envexample-configuracao-de-ambiente"><strong>.env.example</strong> - Configuração de Ambiente</h3>
+<p>Template de configuração que permite personalização sem modificar arquivos principais.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Configurações do MySQL
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>MYSQL_ROOT_PASSWORD=root_password
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>MYSQL_DATABASE=district_zero
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>MYSQL_USER=district_zero_user
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>MYSQL_PASSWORD=district_zero_pass
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>MYSQL_PORT=3306
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a># Configurações do Adminer
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ADMINER_PORT=8080
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a># Configurações de Desenvolvimento
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>COMPOSE_PROJECT_NAME=district_zero
+</code></pre></div>
+<p><strong>Vantagens:</strong>
+- <strong>Flexibilidade</strong>: Personalização sem modificar arquivos versionados
+- <strong>Segurança</strong>: Senhas personalizadas
+- <strong>Portabilidade</strong>: Configurações específicas por ambiente</p>
+<h2 id="scripts-auxiliares">🔧 Scripts Auxiliares</h2>
+<h3 id="scriptshealth-checksh-verificacao-de-saude"><strong>scripts/health-check.sh</strong> - Verificação de Saúde</h3>
+<p>Script automatizado para verificar o status dos serviços.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Verificando status dos containers...&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>docker-compose<span class="w"> </span>ps
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Testando conexão com MySQL...&quot;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT &#39;MySQL OK&#39; as status;&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Verificando Adminer...&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8080<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Adminer OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Adminer indisponível&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Verificando estrutura do banco...&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>district_zero<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW TABLES;&quot;</span>
+</code></pre></div>
+<p><strong>Funcionalidades:</strong>
+- <strong>Status de containers</strong>: Verificação de estado
+- <strong>Conectividade</strong>: Teste de conexão com banco
+- <strong>Integridade</strong>: Validação de estrutura</p>
+<h2 id="arquitetura-de-rede">🌐 Arquitetura de Rede</h2>
+<h3 id="comunicacao-entre-servicos"><strong>Comunicação entre Serviços</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>graph TB
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    A[Host Machine] --&gt; B[Docker Network]
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    B --&gt; C[MySQL Container :3306]
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    B --&gt; D[Adminer Container :8080]
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    C --&gt; E[Volume: mysql_data]
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    C --&gt; F[Init Scripts: /Dev]
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    style A fill:#e1f5fe
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    style B fill:#f3e5f5
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    style C fill:#e8f5e8
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    style D fill:#fff3e0
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    style E fill:#fce4ec
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    style F fill:#f1f8e9
+</code></pre></div>
+<h3 id="mapeamento-de-portas"><strong>Mapeamento de Portas</strong></h3>
+<ul>
+<li><strong>MySQL</strong>: Host:3306 → Container:3306</li>
+<li><strong>Adminer</strong>: Host:8080 → Container:8080</li>
+</ul>
+<h3 id="volumes-e-persistencia"><strong>Volumes e Persistência</strong></h3>
+<ul>
+<li><strong>mysql_data</strong>: Dados do banco persistem entre restarts</li>
+<li><strong>Init scripts</strong>: Arquivos SQL montados para inicialização</li>
+</ul>
+<h2 id="fluxo-de-inicializacao">🔄 Fluxo de Inicialização</h2>
+<h3 id="sequencia-de-startup"><strong>Sequência de Startup</strong></h3>
+<ol>
+<li><strong>Docker Compose</strong>: Inicia orquestração</li>
+<li><strong>MySQL Container</strong>: Criação e configuração</li>
+<li><strong>Init Scripts</strong>: Execução automática dos SQLs</li>
+<li><strong>Adminer Container</strong>: Interface web disponível</li>
+<li><strong>Health Check</strong>: Validação de serviços</li>
+</ol>
+<h3 id="scripts-de-inicializacao"><strong>Scripts de Inicialização</strong></h3>
+<p>Os arquivos na pasta <code>Dev/</code> são executados automaticamente na primeira inicialização do MySQL:</p>
+<ol>
+<li><strong>00_init.sql</strong>: Configurações iniciais</li>
+<li><strong>DDL_mysql.sql</strong>: Estrutura das tabelas</li>
+<li><strong>DML_mysql.sql</strong>: Dados iniciais</li>
+</ol>
+<h2 id="monitoramento-e-logs">📊 Monitoramento e Logs</h2>
+<h3 id="comandos-de-diagnostico"><strong>Comandos de Diagnóstico</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nf">logs</span><span class="o">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;📋 Exibindo logs dos serviços...&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>docker-compose<span class="w"> </span>logs<span class="w"> </span>-f
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nf">logs-mysql</span><span class="o">:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;📋 Logs do MySQL...&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span>docker<span class="w"> </span>logs<span class="w"> </span>district_zero_mysql<span class="w"> </span>-f
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nf">logs-adminer</span><span class="o">:</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;📋 Logs do Adminer...&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span>docker<span class="w"> </span>logs<span class="w"> </span>district_zero_adminer<span class="w"> </span>-f
+</code></pre></div>
+<h3 id="metricas-de-sistema"><strong>Métricas de Sistema</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nf">stats</span><span class="o">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;📊 Estatísticas dos containers...&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span>docker<span class="w"> </span>stats<span class="w"> </span>district_zero_mysql<span class="w"> </span>district_zero_adminer
+</code></pre></div>
+<h2 id="comandos-de-desenvolvimento">🛠️ Comandos de Desenvolvimento</h2>
+<h3 id="acesso-direto-ao-banco"><strong>Acesso Direto ao Banco</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nf">connect-db</span><span class="o">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🔌 Conectando ao MySQL...&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>district_zero_user<span class="w"> </span>-p<span class="w"> </span>district_zero_pass<span class="w"> </span>district_zero
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nf">mysql-cli</span><span class="o">:</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🔌 Conectando como root...&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>district_zero_mysql<span class="w"> </span>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p
+</code></pre></div>
+<h3 id="limpeza-de-ambiente"><strong>Limpeza de Ambiente</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nf">clean</span><span class="o">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🧹 Limpando ambiente...&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;⚠️  ATENÇÃO: Isso apagará todos os dados!&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span>@read<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;Confirma? (y/N): &quot;</span><span class="w"> </span>confirm<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$$</span><span class="s2">confirm&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;y&quot;</span><span class="w"> </span><span class="o">]</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span>docker-compose<span class="w"> </span>down<span class="w"> </span>-v
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span>docker<span class="w"> </span>system<span class="w"> </span>prune<span class="w"> </span>-f
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;✅ Ambiente limpo&quot;</span>
+</code></pre></div>
+<h2 id="demonstracao-automatizada">🎯 Demonstração Automatizada</h2>
+<h3 id="comando-de-entrega"><strong>Comando de Entrega</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nf">entrega</span><span class="o">:</span><span class="w"> </span><span class="n">setup</span> <span class="n">start</span> <span class="n">test</span> <span class="n">health</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🎉 Ambiente pronto para demonstração!&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;📋 Acesse:&quot;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;   🌐 Adminer: http://localhost:8080&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;   🔑 Usuário: district_zero_user&quot;</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;   🗝️  Senha: district_zero_pass&quot;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;   🗄️  Database: district_zero&quot;</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;🧪 Execute &#39;make test&#39; para ver queries de exemplo&quot;</span>
+</code></pre></div>
+<h2 id="configuracoes-de-seguranca">🔒 Configurações de Segurança</h2>
+<h3 id="isolamento-de-rede"><strong>Isolamento de Rede</strong></h3>
+<ul>
+<li>Containers em rede isolada</li>
+<li>Portas expostas apenas conforme necessário</li>
+<li>Comunicação interna segura</li>
+</ul>
+<h3 id="gerenciamento-de-credenciais"><strong>Gerenciamento de Credenciais</strong></h3>
+<ul>
+<li>Senhas através de variáveis de ambiente</li>
+<li>Arquivo <code>.env</code> não versionado</li>
+<li>Template <code>.env.example</code> para referência</li>
+</ul>
+<h3 id="volumes-seguros"><strong>Volumes Seguros</strong></h3>
+<ul>
+<li>Dados persistentes em volumes nomeados</li>
+<li>Separação entre dados e código</li>
+<li>Backup facilitado</li>
+</ul>
+<h2 id="vantagens-da-implementacao">📈 Vantagens da Implementação</h2>
+<h3 id="para-desenvolvimento"><strong>Para Desenvolvimento</strong></h3>
+<ul>
+<li><strong>Ambiente consistente</strong>: Mesma configuração em qualquer máquina</li>
+<li><strong>Setup rápido</strong>: Um comando inicia todo o ambiente</li>
+<li><strong>Isolamento</strong>: Não interfere com outras instalações</li>
+</ul>
+<h3 id="para-demonstracao"><strong>Para Demonstração</strong></h3>
+<ul>
+<li><strong>Facilidade</strong>: Professor pode executar facilmente</li>
+<li><strong>Confiabilidade</strong>: Ambiente controlado e testado</li>
+<li><strong>Documentação</strong>: Comandos claros e bem documentados</li>
+</ul>
+<h3 id="para-manutencao"><strong>Para Manutenção</strong></h3>
+<ul>
+<li><strong>Logs centralizados</strong>: Facilita debugging</li>
+<li><strong>Backup automatizado</strong>: Proteção de dados</li>
+<li><strong>Monitoramento</strong>: Visibilidade do sistema</li>
+</ul>
+<h2 id="historico-de-versao">Histórico de Versão</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Versão</th>
+<th style="text-align: center;">Data</th>
+<th style="text-align: center;">Descrição</th>
+<th style="text-align: center;">Autor(es)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>1.0</code></td>
+<td style="text-align: center;">12/06/2025</td>
+<td style="text-align: center;">Criação da documentação de infraestrutura Docker</td>
+<td style="text-align: center;"><a href="https://github.com/viniciusvieira00">Vinicius Vieira</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
