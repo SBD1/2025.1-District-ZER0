@@ -46,6 +46,12 @@ nav:
     - Modelo Relacional: modulo1/MREL.md
     - Apresentação do Módulo: modulo1/apresentacao.md
 
+  - Módulo 2:
+    - Guia de Setup com Docker: modulo2/setup-docker.md
+    - Implementação SQL: modulo2/implementacao-sql.md
+    - Infraestrutura Docker: modulo2/infraestrutura-docker.md
+    - Apresentação do Módulo: modulo2/apresentacao.md
+
   - Guia de Contribuição:
     - guia-de-contribuicao/politica-de-branches.md
     - guia-de-contribuicao/politica-de-commits.md
