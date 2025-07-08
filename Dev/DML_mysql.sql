@@ -3,23 +3,23 @@ USE district_zero;
 BEGIN;
 
 -- ---------- Jogadores ----------
-INSERT INTO jogadores (username, senha_hash) VALUES
-  ('user_2077',  '$2b$12$hash_placeholder_12345'),
-  ('user_aria',  '$2b$12$hash_placeholder_67890');
+INSERT INTO jogadores (username, senha_hash, xCoord, yCoord) VALUES
+  ('user_2077',  '$2b$12$hash_placeholder_12345', 0, 0),
+  ('user_aria',  '$2b$12$hash_placeholder_67890', 0, 0);
 
 -- ---------- Salas ----------
-INSERT INTO salas (nome, tipo, descricao) VALUES
-  ('Beco do Neon Enferrujado',        'normal',    'Beco úmido e mal-iluminado.'),
-  ('Mercado de Chips Clandestino',    'safe-zone', 'Feira de implantes fora da lei.'),
-  ('Data-Bank Abandonado da OmniCorp','dungeon',   'Servidor repleto de IAs renegadas.'),
-  ('Clínica "Deus Ex Machina"',       'safe-zone', 'Instala aprimoramentos sem perguntas.'),
-  ('O Ninho do Corvo',                'normal',    'Infohub de elite.'),
-  ('Templo do Núcleo',                'safe-zone', 'Refúgio tecno-xamã.'),
-  ('Estação de Recarga Abandonada',   'normal',    'Domínio de gangues.'),
-  ('Avenida dos Servidores',          'normal',    'Corredor de rumores e dados.'),
-  ('Fábrica Desativada da OmniCorp',  'dungeon',   'Ruínas industriais cheias de armadilhas.'),
-  ('Laboratório de Testes Genéticos', 'dungeon',   'Experimentos biotecnológicos ativos.'),
-  ('Refúgio Nômade',                  'safe-zone', 'Base móvel camuflada.');
+INSERT INTO salas (nome, tipo, xCoord, yCoord, descricao) VALUES
+  ('Beco do Neon Enferrujado',        'normal',    0, 0, 'Beco úmido e mal-iluminado.'),
+  ('Mercado de Chips Clandestino',    'safe-zone', 0, 1, 'Feira de implantes fora da lei.'),
+  ('Data-Bank Abandonado da OmniCorp','dungeon',   1, 1, 'Servidor repleto de IAs renegadas.'),
+  ('Clínica "Deus Ex Machina"',       'safe-zone', 1, 2, 'Instala aprimoramentos sem perguntas.'),
+  ('O Ninho do Corvo',                'normal',    2, 2, 'Infohub de elite.'),
+  ('Templo do Núcleo',                'safe-zone', 2, 3, 'Refúgio tecno-xamã.'),
+  ('Estação de Recarga Abandonada',   'normal',    3, 3, 'Domínio de gangues.'),
+  ('Avenida dos Servidores',          'normal',    3, 4, 'Corredor de rumores e dados.'),
+  ('Fábrica Desativada da OmniCorp',  'dungeon',   4, 4, 'Ruínas industriais cheias de armadilhas.'),
+  ('Laboratório de Testes Genéticos', 'dungeon',   4, 5, 'Experimentos biotecnológicos ativos.'),
+  ('Refúgio Nômade',                  'safe-zone', 5, 5, 'Base móvel camuflada.');
 
 -- ---------- Itens ----------
 INSERT INTO itens (nome, tipo, descricao, raridade, valor) VALUES

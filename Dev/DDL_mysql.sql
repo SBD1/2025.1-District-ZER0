@@ -27,8 +27,11 @@ INSERT INTO enum_resultado_comb VALUES ('vitoria'), ('derrota'), ('fugiu');
 -- ---------- Tabelas ----------
 CREATE TABLE jogadores (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    sala_atual_id BIGINT NOT NULL,
     username    VARCHAR(40)  NOT NULL UNIQUE,
     senha_hash  CHAR(60)     NOT NULL,
+    xCoord      INT          NOT NULL,
+    yCoord      INT          NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -36,6 +39,8 @@ CREATE TABLE salas (
     id        BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome      VARCHAR(120) NOT NULL UNIQUE,
     tipo      VARCHAR(20)  NOT NULL,
+    xCoord    INT          NOT NULL,
+    yCoord    INT          NOT NULL,
     descricao TEXT,
     CONSTRAINT fk_salas_tipo FOREIGN KEY (tipo) REFERENCES enum_tipo_sala(value)
 );
