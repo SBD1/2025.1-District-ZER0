@@ -9,13 +9,34 @@ services:
       POSTGRES_DB: district_zero
       POSTGRES_USER: district_zero_user
       POSTGRES_PASSWORD: district_zero_pass
+      # Configurações para melhor execução dos scripts
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      # Logs mais verbosos para debug
+      POSTGRES_LOG_STATEMENT: "all"
+      POSTGRES_LOG_MIN_DURATION_STATEMENT: "0"
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./Dev:/docker-entrypoint-initdb.d
+      # Mapeamento específico para scripts de inicialização
+      - ./Dev:/docker-entrypoint-initdb.d:ro
     networks:
       - district_zero_network
+    # Health check para verificar se o banco está funcionando
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U district_zero_user -d district_zero"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    # Configurações de recursos
+    shm_size: 256mb
+    # Logging para debug
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   adminer:
     image: adminer:4.8.1
@@ -26,12 +47,19 @@ services:
     networks:
       - district_zero_network
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    environment:
+      # Configurações específicas do Adminer
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: "hydra"
 
 volumes:
   postgres_data:
     driver: local
+    name: district_zero_postgres_data
 
 networks:
   district_zero_network:
-    driver: bridge 
+    driver: bridge
+    name: district_zero_network 
