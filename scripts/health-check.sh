@@ -24,20 +24,20 @@ fi
 
 # Verifica se os containers estão rodando
 echo -n "Verificando containers... "
-if ! docker-compose ps | grep -q "district_zero_mysql.*Up"; then
+if ! docker-compose ps | grep -q "district_zero_postgres.*Up"; then
     echo -e "${RED}ERRO${NC}"
-    echo "Container MySQL não está rodando."
+    echo "Container PostgreSQL não está rodando."
     echo "Execute: make start"
     exit 1
 else
     echo -e "${GREEN}OK${NC}"
 fi
 
-# Verifica conexão com MySQL
-echo -n "Verificando conexão MySQL... "
-if ! docker exec district_zero_mysql mysqladmin -u district_zero_user -p district_zero_pass ping > /dev/null 2>&1; then
+# Verifica conexão com PostgreSQL
+echo -n "Verificando conexão PostgreSQL... "
+if ! docker exec district_zero_postgres pg_isready -U district_zero_user -d district_zero > /dev/null 2>&1; then
     echo -e "${RED}ERRO${NC}"
-    echo "Não foi possível conectar ao MySQL."
+    echo "Não foi possível conectar ao PostgreSQL."
     exit 1
 else
     echo -e "${GREEN}OK${NC}"
@@ -45,7 +45,7 @@ fi
 
 # Verifica se o banco de dados existe
 echo -n "Verificando banco de dados... "
-if ! docker exec district_zero_mysql mysql -u district_zero_user -p district_zero_pass -e "USE district_zero; SELECT 1;" > /dev/null 2>&1; then
+if ! docker exec district_zero_postgres psql -U district_zero_user -d district_zero -c "SELECT 1;" > /dev/null 2>&1; then
     echo -e "${RED}ERRO${NC}"
     echo "Banco de dados district_zero não existe ou não está acessível."
     exit 1
@@ -55,7 +55,7 @@ fi
 
 # Verifica se as tabelas existem
 echo -n "Verificando tabelas... "
-TABLE_COUNT=$(docker exec district_zero_mysql mysql -u district_zero_user -p district_zero_pass -e "USE district_zero; SHOW TABLES;" 2>/dev/null | wc -l)
+TABLE_COUNT=$(docker exec district_zero_postgres psql -U district_zero_user -d district_zero -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | xargs)
 if [ "$TABLE_COUNT" -lt 10 ]; then
     echo -e "${RED}ERRO${NC}"
     echo "Número insuficiente de tabelas encontradas ($TABLE_COUNT)."
@@ -66,7 +66,7 @@ fi
 
 # Verifica se há dados nas tabelas
 echo -n "Verificando dados... "
-JOGADOR_COUNT=$(docker exec district_zero_mysql mysql -u district_zero_user -p district_zero_pass -e "USE district_zero; SELECT COUNT(*) FROM jogadores;" 2>/dev/null | tail -n 1)
+JOGADOR_COUNT=$(docker exec district_zero_postgres psql -U district_zero_user -d district_zero -t -c "SELECT COUNT(*) FROM jogadores;" 2>/dev/null | xargs)
 if [ "$JOGADOR_COUNT" -lt 1 ]; then
     echo -e "${RED}ERRO${NC}"
     echo "Não há dados nas tabelas."
@@ -89,7 +89,7 @@ echo -e "${GREEN}✓ Todos os serviços estão funcionando!${NC}"
 echo ""
 echo "Acesse:"
 echo "  • Adminer: http://localhost:8080"
-echo "  • MySQL: localhost:3306"
+echo "  • PostgreSQL: localhost:5432"
 echo ""
 echo "Credenciais:"
 echo "  • Usuário: district_zero_user"
