@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # District ZER0 - Script para preparar arquivos SQL
 # Garante que os arquivos SQL tenham as configurações corretas para execução no PostgreSQL Docker
 
