@@ -177,7 +177,7 @@ CREATE TABLE inventario (
     id            BIGSERIAL PRIMARY KEY,
     personagem_id BIGINT NOT NULL,
     item_id       BIGINT NOT NULL,
-    quantidade    INT    NOT NULL CHECK (quantidade >= 1),
+    quantidade    INT    NOT NULL CHECK (quantidade >= 0),
     
     CONSTRAINT uk_inventario_personagem_item UNIQUE (personagem_id, item_id),
     CONSTRAINT fk_inventario_personagem FOREIGN KEY (personagem_id) REFERENCES personagens(id) ON DELETE CASCADE,
@@ -188,7 +188,7 @@ CREATE TABLE itens_sala (
     id         BIGSERIAL PRIMARY KEY,
     sala_id    BIGINT NOT NULL,
     item_id    BIGINT NOT NULL,
-    quantidade INT    NOT NULL CHECK (quantidade >= 1),
+    quantidade INT    NOT NULL CHECK (quantidade >= 999),
     dropped_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     dropped_by BIGINT, -- ID do personagem que dropou (opcional)
     

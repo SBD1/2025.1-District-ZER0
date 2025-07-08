@@ -1,4 +1,4 @@
--- District ZER0 - Procedures de Facções
+-- District ZER0 - Procedures de Facções (Versão Corrigida)
 -- Completando o sistema de facções conforme planejado
 
 -- ---------- PROCEDURE 1: Entrar em Facção ----------
@@ -58,7 +58,7 @@ CREATE OR REPLACE FUNCTION sair_faccao(
 ) RETURNS TEXT AS $$
 DECLARE
     personagem_rec RECORD;
-    faccao_nome TEXT;
+    v_faccao_nome TEXT;
 BEGIN
     -- Buscar dados do personagem
     SELECT * INTO personagem_rec FROM personagens WHERE id = p_personagem_id;
@@ -72,7 +72,7 @@ BEGIN
     END IF;
     
     -- Obter nome da facção atual
-    SELECT nome INTO faccao_nome FROM faccoes WHERE id = personagem_rec.faccao_id;
+    SELECT nome INTO v_faccao_nome FROM faccoes WHERE id = personagem_rec.faccao_id;
     
     -- Penalidade por deserção
     UPDATE personagens 
@@ -87,7 +87,7 @@ BEGIN
     
     RETURN format('❌ Você saiu da facção "%s".
 💔 Penalidade: -2 reputação por deserção
-📉 A facção perdeu -1 de reputação', faccao_nome);
+📉 A facção perdeu -1 de reputação', v_faccao_nome);
 END;
 $$ LANGUAGE plpgsql;
 
@@ -99,7 +99,7 @@ DECLARE
     personagem_rec RECORD;
     faccao_rec RECORD;
     resultado TEXT := '';
-    contador INT := 0;
+    v_contador INT := 0;
 BEGIN
     -- Buscar dados do personagem
     SELECT * INTO personagem_rec FROM personagens WHERE id = p_personagem_id;
@@ -115,12 +115,12 @@ BEGIN
     FOR faccao_rec IN 
         SELECT * FROM faccoes ORDER BY reputacao DESC, nome
     LOOP
-        contador := contador + 1;
+        v_contador := v_contador + 1;
         
         resultado := resultado || format('%s. %s (Rep: %s)
    %s
    ',
-            contador,
+            v_contador,
             faccao_rec.nome,
             faccao_rec.reputacao,
             COALESCE(faccao_rec.descricao, 'Sem descrição disponível.')
@@ -143,7 +143,7 @@ BEGIN
         END IF;
     END LOOP;
     
-    IF contador = 0 THEN
+    IF v_contador = 0 THEN
         resultado := 'Nenhuma facção encontrada.';
     END IF;
     
@@ -158,9 +158,9 @@ CREATE OR REPLACE FUNCTION status_personagem(
 DECLARE
     personagem_rec RECORD;
     jogador_rec RECORD;
-    faccao_nome TEXT;
+    v_faccao_nome TEXT;
     sala_info RECORD;
-    missoes_ativas INT;
+    v_missoes_ativas INT;
     resultado TEXT := '';
 BEGIN
     -- Buscar dados completos
@@ -179,12 +179,12 @@ BEGIN
     SELECT nome, tipo INTO sala_info FROM salas WHERE id = personagem_rec.sala_atual_id;
     
     IF personagem_rec.faccao_id IS NOT NULL THEN
-        SELECT nome INTO faccao_nome FROM faccoes WHERE id = personagem_rec.faccao_id;
+        SELECT nome INTO v_faccao_nome FROM faccoes WHERE id = personagem_rec.faccao_id;
     ELSE
-        faccao_nome := 'Nenhuma';
+        v_faccao_nome := 'Nenhuma';
     END IF;
     
-    SELECT COUNT(*) INTO missoes_ativas 
+    SELECT COUNT(*) INTO v_missoes_ativas 
     FROM missoes_jogador 
     WHERE personagem_id = p_personagem_id AND status = 'em_andamento';
     
@@ -213,9 +213,9 @@ BEGIN
         personagem_rec.nivel, personagem_rec.experiencia,
         personagem_rec.vida, personagem_rec.ataque, personagem_rec.defesa,
         personagem_rec.reputacao, personagem_rec.carteira,
-        faccao_nome,
+        v_faccao_nome,
         sala_info.nome, sala_info.tipo,
-        missoes_ativas,
+        v_missoes_ativas,
         jogador_rec.username,
         TO_CHAR(personagem_rec.created_at, 'DD/MM/YYYY HH24:MI')
     );
@@ -231,8 +231,8 @@ CREATE OR REPLACE FUNCTION listar_inventario(
 DECLARE
     item_rec RECORD;
     resultado TEXT := '';
-    valor_total INT := 0;
-    contador INT := 0;
+    v_valor_total INT := 0;
+    v_contador INT := 0;
 BEGIN
     resultado := '🎒 INVENTÁRIO:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -248,28 +248,28 @@ BEGIN
         WHERE inv.personagem_id = p_personagem_id
         ORDER BY i.raridade DESC, i.valor DESC, i.nome
     LOOP
-        contador := contador + 1;
-        valor_total := valor_total + item_rec.valor_subtotal;
+        v_contador := v_contador + 1;
+        v_valor_total := v_valor_total + item_rec.valor_subtotal;
         
         resultado := resultado || format('%s. %s x%s
    Tipo: %s | Raridade: %s
    Valor: %s cada (Subtotal: %s créditos)
 
 ',
-            contador,
+            v_contador,
             item_rec.nome, item_rec.quantidade,
             INITCAP(item_rec.tipo), item_rec.raridade,
             item_rec.valor, item_rec.valor_subtotal
         );
     END LOOP;
     
-    IF contador = 0 THEN
+    IF v_contador = 0 THEN
         resultado := resultado || 'Inventário vazio.
 
 ';
     END IF;
     
-    resultado := resultado || format('💰 VALOR TOTAL DO INVENTÁRIO: %s créditos', valor_total);
+    resultado := resultado || format('💰 VALOR TOTAL DO INVENTÁRIO: %s créditos', v_valor_total);
     
     RETURN resultado;
 END;
@@ -280,8 +280,8 @@ CREATE OR REPLACE FUNCTION validar_sistema()
 RETURNS TEXT AS $$
 DECLARE
     resultado TEXT := '';
-    problemas_encontrados INT := 0;
-    temp_count INT;
+    v_problemas_encontrados INT := 0;
+    v_temp_count INT;
 BEGIN
     resultado := '🔧 VALIDAÇÃO DO SISTEMA DISTRICT ZER0
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -289,54 +289,54 @@ BEGIN
 ';
 
     -- Verificar personagens órfãos
-    SELECT COUNT(*) INTO temp_count
+    SELECT COUNT(*) INTO v_temp_count
     FROM personagens p
     WHERE NOT EXISTS (SELECT 1 FROM jogadores j WHERE j.id = p.jogador_id);
     
-    resultado := resultado || format('✓ Personagens órfãos: %s', temp_count);
-    IF temp_count > 0 THEN
-        problemas_encontrados := problemas_encontrados + temp_count;
+    resultado := resultado || format('✓ Personagens órfãos: %s', v_temp_count);
+    IF v_temp_count > 0 THEN
+        v_problemas_encontrados := v_problemas_encontrados + v_temp_count;
         resultado := resultado || ' ⚠️  PROBLEMA DETECTADO';
     END IF;
     resultado := resultado || '
 ';
 
     -- Verificar salas desconectadas
-    SELECT COUNT(*) INTO temp_count
+    SELECT COUNT(*) INTO v_temp_count
     FROM salas s
     WHERE NOT EXISTS (SELECT 1 FROM caminhos c WHERE c.sala_origem = s.id OR c.sala_destino = s.id);
     
-    resultado := resultado || format('✓ Salas desconectadas: %s', temp_count);
-    IF temp_count > 0 THEN
-        problemas_encontrados := problemas_encontrados + temp_count;
+    resultado := resultado || format('✓ Salas desconectadas: %s', v_temp_count);
+    IF v_temp_count > 0 THEN
+        v_problemas_encontrados := v_problemas_encontrados + v_temp_count;
         resultado := resultado || ' ⚠️  PROBLEMA DETECTADO';
     END IF;
     resultado := resultado || '
 ';
 
     -- Verificar mobs mortos
-    SELECT COUNT(*) INTO temp_count FROM mobs WHERE vida <= 0;
+    SELECT COUNT(*) INTO v_temp_count FROM mobs WHERE vida <= 0;
     resultado := resultado || format('✓ Mobs mortos (precisam respawn): %s
-', temp_count);
+', v_temp_count);
 
     -- Verificar missões sem progresso
-    SELECT COUNT(*) INTO temp_count 
+    SELECT COUNT(*) INTO v_temp_count 
     FROM missoes_jogador 
     WHERE status = 'em_andamento' AND progresso = 0 
       AND started_at < CURRENT_TIMESTAMP - INTERVAL '1 hour';
     
     resultado := resultado || format('✓ Missões paradas há mais de 1h: %s
-', temp_count);
+', v_temp_count);
 
     -- Verificar integridade de facções
-    SELECT COUNT(*) INTO temp_count
+    SELECT COUNT(*) INTO v_temp_count
     FROM personagens p
     WHERE faccao_id IS NOT NULL 
       AND NOT EXISTS (SELECT 1 FROM faccoes f WHERE f.id = p.faccao_id);
     
-    resultado := resultado || format('✓ Personagens em facções inexistentes: %s', temp_count);
-    IF temp_count > 0 THEN
-        problemas_encontrados := problemas_encontrados + temp_count;
+    resultado := resultado || format('✓ Personagens em facções inexistentes: %s', v_temp_count);
+    IF v_temp_count > 0 THEN
+        v_problemas_encontrados := v_problemas_encontrados + v_temp_count;
         resultado := resultado || ' ⚠️  PROBLEMA DETECTADO';
     END IF;
     resultado := resultado || '
@@ -347,31 +347,31 @@ BEGIN
 📊 ESTATÍSTICAS GERAIS:
 ';
     
-    SELECT COUNT(*) INTO temp_count FROM jogadores WHERE is_active;
+    SELECT COUNT(*) INTO v_temp_count FROM jogadores WHERE is_active;
     resultado := resultado || format('• Jogadores ativos: %s
-', temp_count);
+', v_temp_count);
     
-    SELECT COUNT(*) INTO temp_count FROM personagens;
+    SELECT COUNT(*) INTO v_temp_count FROM personagens;
     resultado := resultado || format('• Personagens total: %s
-', temp_count);
+', v_temp_count);
     
-    SELECT COUNT(*) INTO temp_count FROM mobs WHERE vida > 0;
+    SELECT COUNT(*) INTO v_temp_count FROM mobs WHERE vida > 0;
     resultado := resultado || format('• Mobs vivos: %s
-', temp_count);
+', v_temp_count);
     
-    SELECT COUNT(*) INTO temp_count FROM missoes_jogador WHERE status = 'em_andamento';
+    SELECT COUNT(*) INTO v_temp_count FROM missoes_jogador WHERE status = 'em_andamento';
     resultado := resultado || format('• Missões ativas: %s
-', temp_count);
+', v_temp_count);
 
     -- Resultado final
     resultado := resultado || '
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ';
     
-    IF problemas_encontrados = 0 THEN
+    IF v_problemas_encontrados = 0 THEN
         resultado := resultado || '✅ SISTEMA ÍNTEGRO - Nenhum problema crítico detectado!';
     ELSE
-        resultado := resultado || format('⚠️  %s PROBLEMAS DETECTADOS - Requer atenção!', problemas_encontrados);
+        resultado := resultado || format('⚠️  %s PROBLEMAS DETECTADOS - Requer atenção!', v_problemas_encontrados);
     END IF;
     
     RETURN resultado;
@@ -486,7 +486,7 @@ $$ LANGUAGE plpgsql;
 -- ---------- VALIDAÇÃO: Verificar Procedures de Facção Criadas ----------
 DO $$
 BEGIN
-    RAISE NOTICE 'Procedures de facção e sistema implementadas:';
+    RAISE NOTICE 'Procedures de facção e sistema implementadas (versão corrigida):';
     RAISE NOTICE '✓ entrar_faccao(personagem_id, faccao_id)';
     RAISE NOTICE '✓ sair_faccao(personagem_id)';
     RAISE NOTICE '✓ listar_faccoes(personagem_id)';
@@ -495,6 +495,6 @@ BEGIN
     RAISE NOTICE '✓ validar_sistema()';
     RAISE NOTICE '✓ dashboard_sistema()';
     RAISE NOTICE '';
-    RAISE NOTICE 'Sistema de facções e validação completo!';
+    RAISE NOTICE 'Sistema de facções e validação completo com variáveis corrigidas!';
 END
 $$; 

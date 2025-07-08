@@ -1,4 +1,4 @@
--- District ZER0 - Procedures Críticas
+-- District ZER0 - Procedures Críticas (Versão Corrigida)
 -- Procedures faltantes identificadas na revisão da entrega-3.md
 
 -- ---------- PROCEDURE 1: Concluir Missão Manualmente ----------
@@ -47,9 +47,9 @@ CREATE OR REPLACE FUNCTION atacar_jogador(
 DECLARE
     atacante_rec RECORD;
     alvo_rec RECORD;
-    dano_causado INT;
+    v_dano_causado INT;
     resultado TEXT := '';
-    creditos_roubados INT;
+    v_creditos_roubados INT;
 BEGIN
     -- Buscar dados do atacante
     SELECT * INTO atacante_rec FROM personagens WHERE id = p_atacante_id;
@@ -91,18 +91,18 @@ BEGIN
     END IF;
     
     -- Calcular dano
-    dano_causado := GREATEST(atacante_rec.ataque - alvo_rec.defesa, 1);
+    v_dano_causado := GREATEST(atacante_rec.ataque - alvo_rec.defesa, 1);
     
     -- Aplicar dano ao alvo
     UPDATE personagens 
-    SET vida = vida - dano_causado 
+    SET vida = vida - v_dano_causado 
     WHERE id = p_alvo_id;
     
     resultado := format('⚔️  PvP: Você atacou jogador %s causando %s de dano!
-', p_alvo_id, dano_causado);
+', p_alvo_id, v_dano_causado);
     
     -- Verificar se alvo morreu
-    IF (alvo_rec.vida - dano_causado) <= 0 THEN
+    IF (alvo_rec.vida - v_dano_causado) <= 0 THEN
         -- Recompensas por PK (Player Kill)
         
         -- 1. Bonus de reputação para atacante
@@ -111,28 +111,28 @@ BEGIN
         WHERE id = p_atacante_id;
         
         -- 2. Roubar parte dos créditos do alvo (20%)
-        creditos_roubados := FLOOR(alvo_rec.carteira * 0.2);
-        IF creditos_roubados > 0 THEN
+        v_creditos_roubados := FLOOR(alvo_rec.carteira * 0.2);
+        IF v_creditos_roubados > 0 THEN
             UPDATE personagens 
-            SET carteira = carteira - creditos_roubados 
+            SET carteira = carteira - v_creditos_roubados 
             WHERE id = p_alvo_id;
             
             UPDATE personagens 
-            SET carteira = carteira + creditos_roubados 
+            SET carteira = carteira + v_creditos_roubados 
             WHERE id = p_atacante_id;
         END IF;
         
         resultado := resultado || format('💀 Alvo foi derrotado em combate PvP!
 🏆 Reputação +2 por vitória PvP
 💰 Você saqueou %s créditos
-🎯 Trigger de morte do alvo será acionada...', creditos_roubados);
+🎯 Trigger de morte do alvo será acionada...', v_creditos_roubados);
         
         -- Nota: Trigger de morte do personagem cuidará do resto (respawn, penalidades, etc.)
     ELSE
         resultado := resultado || format('❤️  Vida do alvo: %s → %s
 ⚠️  Alvo pode contra-atacar no próximo turno!',
             alvo_rec.vida,
-            alvo_rec.vida - dano_causado
+            alvo_rec.vida - v_dano_causado
         );
     END IF;
     
@@ -151,8 +151,8 @@ CREATE OR REPLACE FUNCTION trocar_item(
 DECLARE
     origem_rec RECORD;
     destino_rec RECORD;
-    item_nome TEXT;
-    quantidade_possuida INT;
+    v_item_nome TEXT;
+    v_quantidade_possuida INT;
 BEGIN
     -- Validar quantidade
     IF p_quantidade <= 0 THEN
@@ -176,19 +176,19 @@ BEGIN
     END IF;
     
     -- Obter nome do item
-    SELECT nome INTO item_nome FROM itens WHERE id = p_item_id;
+    SELECT nome INTO v_item_nome FROM itens WHERE id = p_item_id;
     IF NOT FOUND THEN
         RETURN 'ERRO: Item não encontrado.';
     END IF;
     
     -- Verificar se origem possui o item
-    SELECT quantidade INTO quantidade_possuida 
+    SELECT quantidade INTO v_quantidade_possuida 
     FROM inventario 
     WHERE personagem_id = p_origem_id AND item_id = p_item_id;
     
-    IF quantidade_possuida IS NULL OR quantidade_possuida < p_quantidade THEN
+    IF v_quantidade_possuida IS NULL OR v_quantidade_possuida < p_quantidade THEN
         RETURN format('ERRO: Origem não possui %s suficiente (possui: %s).', 
-                      item_nome, COALESCE(quantidade_possuida, 0));
+                      v_item_nome, COALESCE(v_quantidade_possuida, 0));
     END IF;
     
     -- Se há preço envolvido, verificar se destino tem créditos
@@ -209,7 +209,7 @@ BEGIN
     END IF;
     
     -- Remover item do inventário da origem
-    IF quantidade_possuida = p_quantidade THEN
+    IF v_quantidade_possuida = p_quantidade THEN
         -- Se vai remover toda a quantidade, deletar diretamente
         DELETE FROM inventario 
         WHERE personagem_id = p_origem_id AND item_id = p_item_id;
@@ -230,12 +230,12 @@ BEGIN
         RETURN format('✅ Troca realizada: %s x%s por %s créditos
 💰 Personagem %s recebeu %s créditos
 📦 Personagem %s recebeu %s x%s', 
-            item_nome, p_quantidade, p_preco,
+            v_item_nome, p_quantidade, p_preco,
             p_origem_id, p_preco,
-            p_destino_id, item_nome, p_quantidade);
+            p_destino_id, v_item_nome, p_quantidade);
     ELSE
         RETURN format('✅ Item transferido: %s x%s de %s para %s', 
-                      item_nome, p_quantidade, p_origem_id, p_destino_id);
+                      v_item_nome, p_quantidade, p_origem_id, p_destino_id);
     END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -281,12 +281,12 @@ $$ LANGUAGE plpgsql;
 -- ---------- VALIDAÇÃO: Verificar Procedures Críticas Criadas ----------
 DO $$
 BEGIN
-    RAISE NOTICE 'Procedures críticas implementadas:';
+    RAISE NOTICE 'Procedures críticas implementadas (versão corrigida):';
     RAISE NOTICE '✓ concluir_missao(personagem_id, missao_id)';
     RAISE NOTICE '✓ atacar_jogador(atacante_id, alvo_id)';
     RAISE NOTICE '✓ trocar_item(origem, destino, item, qtd, preco)';
     RAISE NOTICE '✓ desistir_missao(personagem_id, missao_id)';
     RAISE NOTICE '';
-    RAISE NOTICE 'Sistema crítico completo!';
+    RAISE NOTICE 'Sistema crítico completo com variáveis corrigidas!';
 END
 $$; 

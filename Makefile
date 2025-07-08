@@ -20,7 +20,7 @@ MAGENTA = \033[1;35m
 CYAN = \033[1;36m
 NC = \033[0m # No Color
 
-.PHONY: help setup setup-python start stop restart clean reset-db connect-db test status psql-cli logs install-deps venv play test-setup demo info backup restore dev docs-serve docs-build entrega all check-scripts validate-system
+.PHONY: help setup setup-python start stop restart clean reset-db connect-db test status psql-cli logs install-deps venv play test-setup demo info backup restore dev docs-serve docs-build entrega all check-scripts validate-system force-rebuild debug-logs check-volumes clean-volumes verify-scripts prepare-sql
 
 help: ## Mostra esta mensagem de ajuda
 	@echo "$(YELLOW)District ZER0 - Cyberpunk Pocket MUD$(NC)"
@@ -41,14 +41,23 @@ help: ## Mostra esta mensagem de ajuda
 	@echo "  $(GREEN)stop$(NC)            Para os serviços"
 	@echo "  $(GREEN)restart$(NC)         Reinicia os serviços"
 	@echo "  $(GREEN)reset-db$(NC)        Reinicia banco com dados limpos"
+	@echo "  $(GREEN)force-rebuild$(NC)   Força reconstrução completa do banco"
 	@echo "  $(GREEN)connect-db$(NC)      Conecta ao PostgreSQL"
 	@echo "  $(GREEN)test$(NC)            Executa queries de validação"
 	@echo ""
 	@echo "$(CYAN)🔧 UTILITÁRIOS:$(NC)"
 	@echo "  $(GREEN)status$(NC)          Status dos serviços"
 	@echo "  $(GREEN)logs$(NC)            Mostra logs dos serviços"
+	@echo "  $(GREEN)debug-logs$(NC)      Mostra logs detalhados para debug"
 	@echo "  $(GREEN)health$(NC)          Verificação de saúde"
 	@echo "  $(GREEN)clean$(NC)           Remove tudo (CUIDADO!)"
+	@echo "  $(GREEN)verify-scripts$(NC)  Verifica se todos os scripts foram executados"
+	@echo ""
+	@echo "$(CYAN)🐛 DEBUG:$(NC)"
+	@echo "  $(GREEN)check-volumes$(NC)   Verifica volumes Docker"
+	@echo "  $(GREEN)clean-volumes$(NC)   Limpa volumes Docker"
+	@echo "  $(GREEN)check-scripts$(NC)   Lista scripts SQL disponíveis"
+	@echo "  $(GREEN)prepare-sql$(NC)     Prepara arquivos SQL para execução"
 
 setup: ## Setup completo (banco + Python)
 	@echo "$(YELLOW)Configurando ambiente District ZER0 completo...$(NC)"
@@ -56,6 +65,7 @@ setup: ## Setup completo (banco + Python)
 	@command -v docker-compose >/dev/null 2>&1 || { echo "$(RED)Docker Compose não está instalado$(NC)"; exit 1; }
 	@command -v python3 >/dev/null 2>&1 || { echo "$(RED)Python 3 não está instalado$(NC)"; exit 1; }
 	@make setup-python
+	@make prepare-sql
 	@make start
 	@echo "$(GREEN)Setup completo finalizado!$(NC)"
 
@@ -82,7 +92,7 @@ start: ## Inicia os serviços (PostgreSQL + Adminer)
 	@docker-compose up -d
 	@echo "$(GREEN)Serviços iniciados!$(NC)"
 	@echo "$(YELLOW)Aguardando PostgreSQL inicializar e executar scripts...$(NC)"
-	@echo "$(BLUE)Scripts executados automaticamente:$(NC)"
+	@echo "$(BLUE)Scripts que serão executados automaticamente:$(NC)"
 	@echo "  • 01_ddl_postgres.sql (Estrutura do banco)"
 	@echo "  • 02_dml_postgres.sql (Dados iniciais)"
 	@echo "  • 03_dql_postgres.sql (Queries de validação)"
@@ -91,7 +101,8 @@ start: ## Inicia os serviços (PostgreSQL + Adminer)
 	@echo "  • 06_procedures_basicas.sql (Procedures básicas)"
 	@echo "  • 07_procedures_criticas.sql (Procedures críticas)"
 	@echo "  • 08_procedures_faccoes.sql (Sistema de facções)"
-	@sleep 15
+	@echo "$(YELLOW)Aguardando health check...$(NC)"
+	@timeout 60 sh -c 'until docker-compose ps | grep -q "healthy"; do echo "Aguardando inicialização..."; sleep 2; done' || echo "$(RED)Health check timeout - verifique os logs$(NC)"
 	@echo "$(GREEN)PostgreSQL: http://localhost:5432$(NC)"
 	@echo "$(GREEN)Adminer: http://localhost:8080$(NC)"
 	@echo ""
@@ -102,6 +113,7 @@ start: ## Inicia os serviços (PostgreSQL + Adminer)
 	@echo "  Senha: $(POSTGRES_PASSWORD)"
 	@echo "  Base de dados: $(POSTGRES_DATABASE)"
 	@echo ""
+	@echo "$(CYAN)Para verificar se os scripts foram executados: make verify-scripts$(NC)"
 	@echo "$(CYAN)Para jogar execute: make play$(NC)"
 
 stop: ## Para os serviços
@@ -121,9 +133,18 @@ clean: ## Remove containers e volumes (CUIDADO: apaga todos os dados!)
 reset-db: ## Reinicia o banco de dados com dados limpos
 	@echo "$(YELLOW)Reiniciando banco de dados...$(NC)"
 	@docker-compose down
-	@docker volume rm $$(docker volume ls -q | grep district) 2>/dev/null || true
+	@docker volume rm district_zero_postgres_data 2>/dev/null || true
 	@docker-compose up -d
 	@echo "$(GREEN)Banco de dados reiniciado!$(NC)"
+
+force-rebuild: ## Força reconstrução completa do banco
+	@echo "$(YELLOW)Forçando reconstrução completa do banco...$(NC)"
+	@docker-compose down -v
+	@docker volume rm district_zero_postgres_data 2>/dev/null || true
+	@docker system prune -f
+	@echo "$(YELLOW)Reconstruindo containers...$(NC)"
+	@docker-compose up -d --force-recreate
+	@echo "$(GREEN)Reconstrução completa finalizada!$(NC)"
 
 connect-db: ## Conecta ao PostgreSQL via linha de comando
 	@echo "$(YELLOW)Conectando ao PostgreSQL...$(NC)"
@@ -138,6 +159,15 @@ test: ## Executa queries de validação do banco
 	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) < Dev/03_dql_postgres.sql
 	@echo "$(GREEN)Validação do banco executada!$(NC)"
 
+verify-scripts: ## Verifica se todos os scripts foram executados
+	@echo "$(YELLOW)Verificando execução dos scripts SQL...$(NC)"
+	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT 'DDL - Tabelas criadas: ' || COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';"
+	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT 'DML - Jogadores inseridos: ' || COUNT(*) FROM jogadores;"
+	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT 'Triggers - Triggers criadas: ' || COUNT(*) FROM information_schema.triggers WHERE trigger_schema = 'public';"
+	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT 'Procedures - Funções criadas: ' || COUNT(*) FROM information_schema.routines WHERE routine_schema = 'public' AND routine_type = 'FUNCTION';"
+	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT 'Sistema - Configurações: ' || COUNT(*) FROM sistema_config;"
+	@echo "$(GREEN)Verificação de scripts concluída!$(NC)"
+
 # === COMANDOS DO JOGO ===
 
 play: ## Executa o jogo (setup automático se necessário)
@@ -148,8 +178,8 @@ play: ## Executa o jogo (setup automático se necessário)
 		echo "$(YELLOW)Ambiente Python não encontrado. Configurando...$(NC)"; \
 		make setup-python; \
 	fi
-	@if ! docker-compose ps | grep -q "Up"; then \
-		echo "$(YELLOW)Banco não está rodando. Iniciando...$(NC)"; \
+	@if ! docker-compose ps | grep -q "healthy"; then \
+		echo "$(YELLOW)Banco não está rodando ou não está saudável. Iniciando...$(NC)"; \
 		make start; \
 		echo "$(YELLOW)Aguardando estabilização...$(NC)"; \
 		sleep 5; \
@@ -165,8 +195,8 @@ test-setup: ## Testa se o ambiente está configurado
 		echo "$(CYAN)Execute: make setup-python$(NC)"; \
 		exit 1; \
 	fi
-	@if ! docker-compose ps | grep -q "Up"; then \
-		echo "$(RED)❌ Banco não está rodando$(NC)"; \
+	@if ! docker-compose ps | grep -q "healthy"; then \
+		echo "$(RED)❌ Banco não está rodando ou não está saudável$(NC)"; \
 		echo "$(CYAN)Execute: make start$(NC)"; \
 		exit 1; \
 	fi
@@ -184,6 +214,9 @@ demo: ## Demonstração completa do sistema
 	@echo ""
 	@echo "$(YELLOW)3. Validando banco de dados...$(NC)"
 	@make test
+	@echo ""
+	@echo "$(YELLOW)4. Verificando scripts executados...$(NC)"
+	@make verify-scripts
 	@echo ""
 	@echo "$(GREEN)✅ Sistema pronto!$(NC)"
 	@echo ""
@@ -203,11 +236,39 @@ status: ## Mostra status dos serviços
 	@docker-compose ps
 
 health: ## Executa verificação completa de saúde dos serviços
-	@./scripts/health-check.sh
+	@echo "$(YELLOW)Verificação de saúde dos serviços:$(NC)"
+	@docker-compose ps
+	@echo ""
+	@echo "$(YELLOW)Health check do PostgreSQL:$(NC)"
+	@docker exec district_zero_postgres pg_isready -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) || echo "$(RED)PostgreSQL não está respondendo$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Testando conexão com o banco:$(NC)"
+	@docker exec district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) -c "SELECT version();" || echo "$(RED)Erro ao conectar no banco$(NC)"
 
 logs: ## Mostra logs dos serviços
 	@echo "$(YELLOW)Logs dos serviços District ZER0:$(NC)"
 	@docker-compose logs -f
+
+debug-logs: ## Mostra logs detalhados para debug
+	@echo "$(YELLOW)Logs detalhados para debug:$(NC)"
+	@echo "$(BLUE)Logs do PostgreSQL:$(NC)"
+	@docker-compose logs postgres
+	@echo ""
+	@echo "$(BLUE)Logs do Adminer:$(NC)"
+	@docker-compose logs adminer
+
+check-volumes: ## Verifica volumes Docker
+	@echo "$(YELLOW)Verificando volumes Docker:$(NC)"
+	@docker volume ls | grep district || echo "$(RED)Nenhum volume encontrado$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Detalhes dos volumes:$(NC)"
+	@docker volume inspect district_zero_postgres_data 2>/dev/null || echo "$(RED)Volume principal não encontrado$(NC)"
+
+clean-volumes: ## Limpa volumes Docker
+	@echo "$(YELLOW)Limpando volumes Docker...$(NC)"
+	@docker-compose down -v
+	@docker volume prune -f
+	@echo "$(GREEN)Volumes limpos!$(NC)"
 
 check-scripts: ## Verifica quais scripts SQL serão executados
 	@echo "$(YELLOW)Scripts SQL no diretório Dev/:$(NC)"
@@ -220,6 +281,13 @@ check-scripts: ## Verifica quais scripts SQL serão executados
 	@echo ""
 	@echo "$(BLUE)Ordem de execução (alfabética):$(NC)"
 	@ls Dev/*.sql 2>/dev/null | nl -v0 | sed 's/^/  /'
+	@echo ""
+	@echo "$(YELLOW)Verificando permissões dos arquivos:$(NC)"
+	@ls -la Dev/*.sql | awk '{print "  " $$1 " " $$NF}'
+
+prepare-sql: ## Prepara arquivos SQL para execução no Docker
+	@echo "$(YELLOW)Preparando arquivos SQL para execução...$(NC)"
+	@./scripts/prepare-sql-files.sh
 
 validate-system: ## Valida se todo o sistema está funcionando
 	@echo "$(YELLOW)Validando sistema District ZER0...$(NC)"
@@ -227,7 +295,9 @@ validate-system: ## Valida se todo o sistema está funcionando
 	@echo ""
 	@make status
 	@echo ""
-	@make test-setup
+	@make health
+	@echo ""
+	@make verify-scripts
 
 # Comandos avançados
 backup: ## Cria backup do banco de dados
@@ -269,6 +339,7 @@ entrega: ## Prepara o projeto para entrega
 	@make start
 	@sleep 15
 	@make test
+	@make verify-scripts
 	@echo "$(GREEN)Projeto pronto para entrega!$(NC)"
 	@echo ""
 	@echo "$(YELLOW)Acesse:$(NC)"
