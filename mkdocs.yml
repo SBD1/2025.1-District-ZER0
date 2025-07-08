@@ -52,6 +52,11 @@ nav:
     - Infraestrutura Docker: modulo2/infraestrutura-docker.md
     - Apresentação do Módulo: modulo2/apresentacao.md
 
+  - Módulo 3:
+    - Como Jogar: modulo3/como-jogar.md
+    - Implementação Técnica: modulo3/implementacao.md
+    - Apresentação do Módulo: modulo3/apresentacao.md
+
   - Guia de Contribuição:
     - guia-de-contribuicao/politica-de-branches.md
     - guia-de-contribuicao/politica-de-commits.md
