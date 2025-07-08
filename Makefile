@@ -1,5 +1,5 @@
 # District ZER0 - Makefile
-# Cyberpunk Pocket MUD Database Management
+# Cyberpunk Pocket MUD Database Management & CLI Application
 
 # Configurações
 POSTGRES_HOST = localhost
@@ -7,34 +7,91 @@ POSTGRES_PORT = 5432
 POSTGRES_USER = district_zero_user
 POSTGRES_PASSWORD = district_zero_pass
 POSTGRES_DATABASE = district_zero
+PYTHON_ENV = .venv
+PYTHON = $(PYTHON_ENV)/bin/python
+PIP = $(PYTHON_ENV)/bin/pip
 
 # Cores para output
 YELLOW = \033[1;33m
 GREEN = \033[1;32m
 RED = \033[1;31m
+BLUE = \033[1;34m
+MAGENTA = \033[1;35m
+CYAN = \033[1;36m
 NC = \033[0m # No Color
 
-.PHONY: help setup start stop restart clean reset-db connect-db test status psql-cli logs
+.PHONY: help setup setup-python start stop restart clean reset-db connect-db test status psql-cli logs install-deps venv play test-setup demo info backup restore dev docs-serve docs-build entrega all check-scripts validate-system
 
 help: ## Mostra esta mensagem de ajuda
 	@echo "$(YELLOW)District ZER0 - Cyberpunk Pocket MUD$(NC)"
 	@echo "$(YELLOW)====================================$(NC)"
 	@echo ""
-	@echo "Comandos disponíveis:"
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  $(GREEN)%-15s$(NC) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@echo "$(CYAN)🎮 JOGO:$(NC)"
+	@echo "  $(GREEN)play$(NC)            Executa o jogo (setup automático)"
+	@echo "  $(GREEN)demo$(NC)            Demonstração completa do sistema"
+	@echo "  $(GREEN)test-setup$(NC)      Testa se o ambiente está configurado"
+	@echo ""
+	@echo "$(CYAN)🛠️  CONFIGURAÇÃO:$(NC)"
+	@echo "  $(GREEN)setup$(NC)           Setup completo (banco + python)"
+	@echo "  $(GREEN)setup-python$(NC)    Configura apenas ambiente Python"
+	@echo "  $(GREEN)install-deps$(NC)    Instala dependências Python"
+	@echo ""
+	@echo "$(CYAN)🐘 BANCO DE DADOS:$(NC)"
+	@echo "  $(GREEN)start$(NC)           Inicia PostgreSQL + Adminer"
+	@echo "  $(GREEN)stop$(NC)            Para os serviços"
+	@echo "  $(GREEN)restart$(NC)         Reinicia os serviços"
+	@echo "  $(GREEN)reset-db$(NC)        Reinicia banco com dados limpos"
+	@echo "  $(GREEN)connect-db$(NC)      Conecta ao PostgreSQL"
+	@echo "  $(GREEN)test$(NC)            Executa queries de validação"
+	@echo ""
+	@echo "$(CYAN)🔧 UTILITÁRIOS:$(NC)"
+	@echo "  $(GREEN)status$(NC)          Status dos serviços"
+	@echo "  $(GREEN)logs$(NC)            Mostra logs dos serviços"
+	@echo "  $(GREEN)health$(NC)          Verificação de saúde"
+	@echo "  $(GREEN)clean$(NC)           Remove tudo (CUIDADO!)"
 
-setup: ## Instala dependências e prepara o ambiente
-	@echo "$(YELLOW)Configurando ambiente District ZER0...$(NC)"
+setup: ## Setup completo (banco + Python)
+	@echo "$(YELLOW)Configurando ambiente District ZER0 completo...$(NC)"
 	@command -v docker >/dev/null 2>&1 || { echo "$(RED)Docker não está instalado$(NC)"; exit 1; }
 	@command -v docker-compose >/dev/null 2>&1 || { echo "$(RED)Docker Compose não está instalado$(NC)"; exit 1; }
-	@echo "$(GREEN)Ambiente configurado com sucesso!$(NC)"
+	@command -v python3 >/dev/null 2>&1 || { echo "$(RED)Python 3 não está instalado$(NC)"; exit 1; }
+	@make setup-python
+	@make start
+	@echo "$(GREEN)Setup completo finalizado!$(NC)"
+
+setup-python: ## Configura ambiente Python
+	@echo "$(YELLOW)Configurando ambiente Python...$(NC)"
+	@command -v python3 >/dev/null 2>&1 || { echo "$(RED)Python 3 não está instalado$(NC)"; exit 1; }
+	@test -d $(PYTHON_ENV) || python3 -m venv $(PYTHON_ENV)
+	@$(PIP) install --upgrade pip
+	@make install-deps
+	@echo "$(GREEN)Ambiente Python configurado!$(NC)"
+
+install-deps: ## Instala dependências Python
+	@echo "$(YELLOW)Instalando dependências Python...$(NC)"
+	@test -f requirements.txt || { echo "$(RED)requirements.txt não encontrado$(NC)"; exit 1; }
+	@$(PIP) install -r requirements.txt
+	@echo "$(GREEN)Dependências instaladas!$(NC)"
+
+venv: ## Ativa ambiente virtual (use: source .venv/bin/activate)
+	@echo "$(YELLOW)Para ativar o ambiente virtual execute:$(NC)"
+	@echo "$(CYAN)source .venv/bin/activate$(NC)"
 
 start: ## Inicia os serviços (PostgreSQL + Adminer)
 	@echo "$(YELLOW)Iniciando District ZER0 Database...$(NC)"
 	@docker-compose up -d
 	@echo "$(GREEN)Serviços iniciados!$(NC)"
-	@echo "$(YELLOW)Aguardando PostgreSQL inicializar...$(NC)"
-	@sleep 10
+	@echo "$(YELLOW)Aguardando PostgreSQL inicializar e executar scripts...$(NC)"
+	@echo "$(BLUE)Scripts executados automaticamente:$(NC)"
+	@echo "  • 01_ddl_postgres.sql (Estrutura do banco)"
+	@echo "  • 02_dml_postgres.sql (Dados iniciais)"
+	@echo "  • 03_dql_postgres.sql (Queries de validação)"
+	@echo "  • 04_correcoes_criticas.sql (Correções)"
+	@echo "  • 05_triggers_basicas.sql (Triggers)"
+	@echo "  • 06_procedures_basicas.sql (Procedures básicas)"
+	@echo "  • 07_procedures_criticas.sql (Procedures críticas)"
+	@echo "  • 08_procedures_faccoes.sql (Sistema de facções)"
+	@sleep 15
 	@echo "$(GREEN)PostgreSQL: http://localhost:5432$(NC)"
 	@echo "$(GREEN)Adminer: http://localhost:8080$(NC)"
 	@echo ""
@@ -44,6 +101,8 @@ start: ## Inicia os serviços (PostgreSQL + Adminer)
 	@echo "  Usuário: $(POSTGRES_USER)"
 	@echo "  Senha: $(POSTGRES_PASSWORD)"
 	@echo "  Base de dados: $(POSTGRES_DATABASE)"
+	@echo ""
+	@echo "$(CYAN)Para jogar execute: make play$(NC)"
 
 stop: ## Para os serviços
 	@echo "$(YELLOW)Parando District ZER0 Database...$(NC)"
@@ -74,10 +133,70 @@ psql-cli: ## Conecta ao PostgreSQL como usuário padrão
 	@echo "$(YELLOW)Conectando ao PostgreSQL...$(NC)"
 	@docker exec -it district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE)
 
-test: ## Executa queries de teste
-	@echo "$(YELLOW)Executando queries de teste...$(NC)"
+test: ## Executa queries de validação do banco
+	@echo "$(YELLOW)Executando queries de validação...$(NC)"
 	@docker exec -i district_zero_postgres psql -U$(POSTGRES_USER) -d$(POSTGRES_DATABASE) < Dev/03_dql_postgres.sql
-	@echo "$(GREEN)Testes executados!$(NC)"
+	@echo "$(GREEN)Validação do banco executada!$(NC)"
+
+# === COMANDOS DO JOGO ===
+
+play: ## Executa o jogo (setup automático se necessário)
+	@echo "$(MAGENTA)🎮 DISTRICT ZER0 - CYBERPUNK MUD$(NC)"
+	@echo "$(MAGENTA)================================$(NC)"
+	@echo ""
+	@if [ ! -d "$(PYTHON_ENV)" ]; then \
+		echo "$(YELLOW)Ambiente Python não encontrado. Configurando...$(NC)"; \
+		make setup-python; \
+	fi
+	@if ! docker-compose ps | grep -q "Up"; then \
+		echo "$(YELLOW)Banco não está rodando. Iniciando...$(NC)"; \
+		make start; \
+		echo "$(YELLOW)Aguardando estabilização...$(NC)"; \
+		sleep 5; \
+	fi
+	@echo "$(GREEN)Iniciando District ZER0...$(NC)"
+	@echo ""
+	@$(PYTHON) run_game.py
+
+test-setup: ## Testa se o ambiente está configurado
+	@echo "$(YELLOW)Testando configuração do District ZER0...$(NC)"
+	@if [ ! -d "$(PYTHON_ENV)" ]; then \
+		echo "$(RED)❌ Ambiente Python não configurado$(NC)"; \
+		echo "$(CYAN)Execute: make setup-python$(NC)"; \
+		exit 1; \
+	fi
+	@if ! docker-compose ps | grep -q "Up"; then \
+		echo "$(RED)❌ Banco não está rodando$(NC)"; \
+		echo "$(CYAN)Execute: make start$(NC)"; \
+		exit 1; \
+	fi
+	@$(PYTHON) test_setup.py
+
+demo: ## Demonstração completa do sistema
+	@echo "$(MAGENTA)🎮 DISTRICT ZER0 - DEMONSTRAÇÃO COMPLETA$(NC)"
+	@echo "$(MAGENTA)=====================================$(NC)"
+	@echo ""
+	@echo "$(YELLOW)1. Configurando ambiente...$(NC)"
+	@make setup
+	@echo ""
+	@echo "$(YELLOW)2. Testando configuração...$(NC)"
+	@make test-setup
+	@echo ""
+	@echo "$(YELLOW)3. Validando banco de dados...$(NC)"
+	@make test
+	@echo ""
+	@echo "$(GREEN)✅ Sistema pronto!$(NC)"
+	@echo ""
+	@echo "$(CYAN)🎯 ACESSO AO SISTEMA:$(NC)"
+	@echo "  • Jogo: make play"
+	@echo "  • Adminer: http://localhost:8080"
+	@echo "  • Banco: localhost:5432"
+	@echo ""
+	@echo "$(YELLOW)Quer jogar agora? [s/N]$(NC)"
+	@read -r play; \
+	if [ "$$play" = "s" ] || [ "$$play" = "S" ]; then \
+		make play; \
+	fi
 
 status: ## Mostra status dos serviços
 	@echo "$(YELLOW)Status dos serviços District ZER0:$(NC)"
@@ -89,6 +208,26 @@ health: ## Executa verificação completa de saúde dos serviços
 logs: ## Mostra logs dos serviços
 	@echo "$(YELLOW)Logs dos serviços District ZER0:$(NC)"
 	@docker-compose logs -f
+
+check-scripts: ## Verifica quais scripts SQL serão executados
+	@echo "$(YELLOW)Scripts SQL no diretório Dev/:$(NC)"
+	@ls -la Dev/*.sql 2>/dev/null | while read -r line; do \
+		file=$$(echo "$$line" | awk '{print $$NF}'); \
+		if [ -f "$$file" ]; then \
+			echo "  $(GREEN)✓$(NC) $$file"; \
+		fi; \
+	done
+	@echo ""
+	@echo "$(BLUE)Ordem de execução (alfabética):$(NC)"
+	@ls Dev/*.sql 2>/dev/null | nl -v0 | sed 's/^/  /'
+
+validate-system: ## Valida se todo o sistema está funcionando
+	@echo "$(YELLOW)Validando sistema District ZER0...$(NC)"
+	@make check-scripts
+	@echo ""
+	@make status
+	@echo ""
+	@make test-setup
 
 # Comandos avançados
 backup: ## Cria backup do banco de dados
@@ -141,5 +280,32 @@ entrega: ## Prepara o projeto para entrega
 	@echo "  2. Acesse http://localhost:8080"
 	@echo "  3. make test (para executar queries)"
 
-# Comando padrão
-all: setup start test ## Executa setup completo 
+# === COMANDO PADRÃO ===
+all: demo ## Executa demonstração completa
+
+# === INFORMAÇÕES ÚTEIS ===
+info: ## Mostra informações sobre o projeto
+	@echo "$(CYAN)╔══════════════════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(CYAN)║                         DISTRICT ZER0 - CYBERPUNK MUD                       ║$(NC)"
+	@echo "$(CYAN)╚══════════════════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)📋 SISTEMA COMPLETO:$(NC)"
+	@echo "  • PostgreSQL 15 com 18 tabelas"
+	@echo "  • 50+ procedures e functions"
+	@echo "  • 15+ triggers automáticas"
+	@echo "  • Interface CLI Python completa"
+	@echo "  • 15 salas interconectadas"
+	@echo "  • 6 classes de personagem"
+	@echo "  • 7 facções disponíveis"
+	@echo "  • 12 missões implementadas"
+	@echo ""
+	@echo "$(YELLOW)🚀 COMANDOS PRINCIPAIS:$(NC)"
+	@echo "  $(GREEN)make play$(NC)     - Jogar o MUD"
+	@echo "  $(GREEN)make demo$(NC)     - Demonstração completa"
+	@echo "  $(GREEN)make setup$(NC)    - Configurar tudo"
+	@echo "  $(GREEN)make help$(NC)     - Ver todos os comandos"
+	@echo ""
+	@echo "$(YELLOW)🔗 ACESSO:$(NC)"
+	@echo "  • Jogo: make play"
+	@echo "  • Adminer: http://localhost:8080"
+	@echo "  • PostgreSQL: localhost:5432" 
