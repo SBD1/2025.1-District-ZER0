@@ -2,17 +2,12 @@
 
 Esta apresentação demonstra a implementação completa do módulo 2 do projeto District ZER0, incluindo a configuração Docker, implementação SQL e automação com Makefile. O vídeo apresenta o funcionamento prático do sistema e as principais funcionalidades desenvolvidas.
 
-## 🎬 Vídeo de Apresentação
+## **🎬 Vídeo de Apresentação**
 
-<!-- Placeholder para o link do vídeo quando for criado -->
-*Vídeo em produção - será atualizado em breve com o link do YouTube*
-
-<!-- Exemplo de estrutura para quando o vídeo estiver pronto:
-Você pode acessar o vídeo de apresentação pelo link: [Apresentação do Módulo 2](https://www.youtube.com/watch?v=LINK_DO_VIDEO)
+Você pode acessar o vídeo de apresentação pelo link: [Apresentação do Módulo 2](https://www.youtube.com/watch?v=nXCT5-jN8FU)
 
 Ou pode visualizar diretamente por aqui:
-<iframe width="768" height="432" src="https://www.youtube.com/embed/LINK_DO_VIDEO" title="Entrega 2 - Banco de Dados - Grupo 15" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
--->
+<iframe width="768" height="432" src="https://www.youtube.com/embed/nXCT5-jN8FU?si=zW_OCpZMoJJYoopJ" title="Entrega 3 - Sistema MUD Completo - Grupo 15" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## 🎯 Conteúdo da Apresentação
 
